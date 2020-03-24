@@ -67,13 +67,12 @@ class SaveIncremental(bpy.types.Operator):
         if currentblend:
             save_path = self.get_incremented_path(currentblend)
 
-            # add it to the recent files list
-            add_path_to_recent_files(save_path)
-
-            if os.path.exists(save_path):
-                self.report({'ERROR'}, "File '%s' exists already!\nBlend has NOT been saved incrementally!" % (save_path))
+            while os.path.exists(save_path):
+                save_path = self.get_incremented_path(save_path)
             else:
                 bpy.ops.wm.save_as_mainfile(filepath=save_path)
+                # add it to the recent files list
+                add_path_to_recent_files(save_path)
                 print("Saved blend incrementally:", save_path)
         else:
             bpy.ops.wm.save_mainfile('INVOKE_DEFAULT')
@@ -91,22 +90,25 @@ class SaveIncremental(bpy.types.Operator):
 
         if mo:
             name = mo.group(1)
-            numberendRegex = re.compile(r"(.*?)(\d+)$")
+            sep = "[ _ ?| \- ?| \. ?| \_?|\_ ?| \-?|\- ?|_?|__?|\-?|\.?| ?]"
+            numberendRegex = re.compile(r"(.*?" + sep + ")(\d+)(.*)")
 
             mo = numberendRegex.match(name)
 
             if mo:
                 basename = mo.group(1)
                 numberstr = mo.group(2)
+                suffixstr = mo.group(3)
             else:
                 basename = name + "_"
                 numberstr = "000"
+                suffixstr = ""
 
             number = int(numberstr)
 
             incr = number + 1
             incrstr = str(incr).zfill(len(numberstr))
-            incrname = basename + incrstr + ".blend"
+            incrname = basename + incrstr + suffixstr + ".blend"
 
             return os.path.join(path, incrname)
 
