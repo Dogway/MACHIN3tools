@@ -633,7 +633,7 @@ class PieSave(Menu):
         pie.separator()
 
         # 9 - TOP - RIGHT
-        pie.operator("wm.quit_blender", text="Close", icon_value=get_icon('new'))
+        pie.operator("wm.quit_blender", text="Close", icon='QUIT')
 
         # 1 - BOTTOM - LEFT
         pie.operator("machin3.new", text="New", icon_value=get_icon('new'))
