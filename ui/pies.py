@@ -615,10 +615,10 @@ class PieSave(Menu):
         # box = pie.box().split()
 
         b = box.box()
-        column = b.column()
+        column = b.column(align=True)
         self.draw_left_column(column)
 
-        column = box.column()
+        column = box.column(align=True)
         b = column.box()
         self.draw_center_column_top(b)
 
@@ -626,15 +626,14 @@ class PieSave(Menu):
             b = column.box()
             self.draw_center_column_bottom(b)
 
-        b = box.box()
-        column = b.column()
+        column = box.column()
         self.draw_right_column(column)
 
         # 7 - TOP - LEFT
         pie.separator()
 
         # 9 - TOP - RIGHT
-        pie.separator()
+        pie.operator("wm.quit_blender", text="Close", icon_value=get_icon('new'))
 
         # 1 - BOTTOM - LEFT
         pie.operator("machin3.new", text="New", icon_value=get_icon('new'))
@@ -643,7 +642,7 @@ class PieSave(Menu):
         pie.operator("machin3.save_incremental", text="Incremental Save", icon_value=get_icon('save_incremental'))
 
     def draw_left_column(self, col):
-        col.scale_x = 1.1
+        col.scale_x = 2.1
 
         row = col.row()
         row.scale_y = 1.5
@@ -655,10 +654,17 @@ class PieSave(Menu):
         col.operator("wm.recover_auto_save", text="Recover Auto Save...", icon_value=get_icon('recover_auto_save'))
         col.operator("uoza.force_auto_save", text="Force Auto Save...", icon_value=get_icon('recover_auto_save'))
         col.operator("uoza.open_last", text="Open Last...", icon_value=get_icon('recover_auto_save'))
-        # col.operator("wm.recover_last_session", text="Recover Last Session", icon='RECOVER_LAST')
+#        col.operator("wm.recover_last_session", text="Recover Last Session", icon='RECOVER_LAST')
         col.operator("wm.revert_mainfile", text="Revert", icon_value=get_icon('revert'))
 
     def draw_center_column_top(self, col):
+        row = col.split(factor=0.25)
+        row.label(text="REF")
+        r = row.row(align=True)
+        r.operator("wm.append", text="Append", icon_value=get_icon('append'))
+        r.operator("wm.link", text="Link", icon_value=get_icon('link'))
+        r.operator("wm.call_menu", text="", icon_value=get_icon('external_data')).name = "TOPBAR_MT_file_external_data"
+
         row = col.split(factor=0.25)
         row.label(text="OBJ")
         r = row.row(align=True)
@@ -680,9 +686,7 @@ class PieSave(Menu):
     def draw_right_column(self, col):
         row = col.row()
         r = row.row(align=True)
-        r.operator("wm.append", text="Append", icon_value=get_icon('append'))
-        r.operator("wm.link", text="Link", icon_value=get_icon('link'))
-        row.operator("wm.call_menu", text="", icon_value=get_icon('external_data')).name = "TOPBAR_MT_file_external_data"
+        row.separator()
 
         # append world and materials
 
